@@ -1,0 +1,45 @@
+ <?php 
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+// Process only when method is POST
+if($method == 'POST'){
+	$requestBody = file_get_contents('php://input');
+	$json = json_decode($requestBody);
+
+	$text = $json->result->parameters->text;
+
+	switch ($text) {
+		case 'hello':
+			$speech = "Hello, puis-je t'aider";
+			break;
+
+		case 'congé':
+			$speech = "congé ajouté";
+			break;
+      
+   case 'timesheet':
+			$speech = "timesheet remplie";
+			break;
+
+		case 'help':
+			$speech = "je suis là pour t'aider, demande moi ce que tu veux";
+			break;
+		
+		default:
+			$speech = "Sorry, I didnt get that. Please ask me something else.";
+			break;
+	}
+
+	$response = new \stdClass();
+	$response->speech = $speech;
+	$response->displayText = $speech;
+	$response->source = "webhook";
+	echo json_encode($response);
+}
+else
+{
+	echo "Method not allowed";
+}
+
+?>
